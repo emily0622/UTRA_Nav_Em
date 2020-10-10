@@ -1,0 +1,17 @@
+<launch>
+
+    <arg name="use_gui" default="false"/>
+    <arg name="world" default="$(find worlds)/willowgarage.world"/>
+
+    <!-- Open a world in Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="gui" value="$(arg use_gui)"/>
+    </include>
+
+    <!-- Spawn the robot -->
+    <include file="$(find description)/launch/spawn_robot.launch">
+        <arg name="robot_ns" value="navi"/>
+    </include>
+
+</launch>

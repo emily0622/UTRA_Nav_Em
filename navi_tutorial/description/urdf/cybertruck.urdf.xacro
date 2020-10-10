@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<robot name="cybertruck" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Includes -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+    <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
+    <xacro:include filename="$(find description)/urdf/plugins.gazebo.xacro"/>
+
+    <link name="base_link"/>
+
+    <!-- Body -->
+    <!-- NOTE: cybertuck uses a frame where "-y" is forward for the model. base_link -> body_link will correct for this -->
+    <link name="body_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/cybertruck_body.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/cybertruck_body.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <xacro:body_inertial m="${body_mass}" l="${body_length}" w="${body_width}" h="${body_height}"/>
+        </inertial>
+    </link>
+
+    <joint name="body_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="body_link"/>
+        <origin xyz="0 0 0.0" rpy="0 0 ${pi / 2}"/>
+    </joint>
+
+    <!-- Wheels -->
+    <xacro:include filename="$(find description)/urdf/wheels.urdf.xacro"/>
+
+    <!-- LIDAR (also used for IMU) -->
+    <link name="scan_link"/>
+
+    <joint name="scan_joint" type="fixed">
+        <parent link="body_link"/>
+        <child link="scan_link"/>
+        <origin xyz="0 ${front_wheel} ${-height_to_wheel}" rpy="0 0 ${-pi / 2}"/>
+    </joint>
+
+</robot>
